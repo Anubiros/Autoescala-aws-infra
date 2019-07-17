@@ -1,22 +1,24 @@
 # Autoescala-aws-infra
 Sistema de Infraestrutura escalavel com Terraform
+Compatível com Terraform 0.11 e 0.12
 
-#Recursos 
-- Load balancer
-- Auto Scaling Group
+#Recursos disponiveis no scripts
+- Gerenciador de Carga
+- Auto Escalável
 - Multi-AZ
-- Launch Configuration
-- Scale UP Policy
-- Security Groups
+- Configurações Personalizáveis
+- Politicas de upgrade escalável
+- Politicas de Segurança
 
 #Para realizar o deploy
 
 terraform init
+
+terraform plan 
+
 terraform apply
 
-#Testando o Auto Scaling
-
-Se não tem o pacote stress, instalar o mesmo.
-
+#Testando o sistema auto escalavel
+(pacote stress incluso no script)
 #stress -c 1 --vm 2
 

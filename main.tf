@@ -1,7 +1,22 @@
+#!/bin/bash
+
+# Autoescala AWS com Terraform
+# Projeto para implantação de Infraestruturas
+# --------------------------------
+# autor    : Humberto Machado (Hmaxsuel25) 
+#          
+# projeto   : https://github.com/hmaxsuel25/autoescala-aws-infra
+#
+# licença  : MIT (https://mit-license.org/)
+#
+# link de referencia: https://terraform.io
+
+#Região Padrão - SP
 provider "aws" {
     region = "${var.region}" 
 }
 
+#Configuração Inicial Webcluster
 resource "aws_launch_configuration" "webcluster" {
     image_id=  "${var.ami}"
     instance_type = "${var.instance_type}"
@@ -19,6 +34,7 @@ resource "aws_key_pair" "myawskeypair" {
     public_key = "${file("${var.key_path}")}"
 }
 
+#Grupos de Escalas
 resource "aws_autoscaling_group" "scalegroup" {
     launch_configuration = "${aws_launch_configuration.webcluster.name}"
     availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
@@ -34,7 +50,7 @@ resource "aws_autoscaling_group" "scalegroup" {
         propagate_at_launch = true
     }
 }
-
+#Politicas padrão 
 resource "aws_autoscaling_policy" "autopolicy" {
     name = "terraform-autoplicy"
     scaling_adjustment = 1
@@ -43,6 +59,7 @@ resource "aws_autoscaling_policy" "autopolicy" {
     autoscaling_group_name = "${aws_autoscaling_group.scalegroup.name}"
 }
 
+#Gerador de Alarmes para a autoescala
 resource "aws_cloudwatch_metric_alarm" "cpualarm" {
     alarm_name = "terraform-alarm"
     comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -61,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "cpualarm" {
     alarm_actions = ["${aws_autoscaling_policy.autopolicy.arn}"]
 }
 
-#
+#Politicas de autoescala de acordo com a utilização
 resource "aws_autoscaling_policy" "autopolicy-down" {
     name = "terraform-autoplicy-down"
     scaling_adjustment = -1
@@ -174,6 +191,11 @@ resource "aws_lb_cookie_stickiness_policy" "cookie_stickness" {
     load_balancer = "${aws_elb.elb1.id}"
     lb_port = 80
     cookie_expiration_period = 600
+}
+
+provisioner "file" {
+source="script.sh"
+destination="/tmp/script.sh"
 }
 
 output "availabilityzones" {
