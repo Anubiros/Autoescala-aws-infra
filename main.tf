@@ -193,10 +193,6 @@ resource "aws_lb_cookie_stickiness_policy" "cookie_stickness" {
     cookie_expiration_period = 600
 }
 
-provisioner "file" {
-source="script.sh"
-destination="/tmp/script.sh"
-}
 
 output "availabilityzones" {
     value = ["us-east-1a", "us-east-1b", "us-east-1c"]

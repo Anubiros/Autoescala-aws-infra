@@ -24,28 +24,12 @@ variable "key_path" {
 }
 
 # Variavel ami antiga
-#variable "ami" {
-#  description = "AMI"
-#  default = "ami-dff5d1b3" // Ubuntu 14.04
-#}
-
-
-#Variavel Nova - em teste
-variable  "ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
+variable "ami" {
+  description = "AMI"
+  default = "ami-dff5d1b3" // Ubuntu 14.04
 }
+
+
 
 variable "instance_type" {
   description = "EC2 instance type"
